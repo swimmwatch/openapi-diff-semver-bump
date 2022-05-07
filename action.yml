@@ -15,7 +15,7 @@ inputs:
 outputs:
   new-package-version:
     description: "New package version"
-    value: ${{steps.gen-new-version.outputs.new_package_version}}
+    value: ${{steps.output_version.outputs.new_package_version}}
 
 runs:
   using: "composite"
@@ -26,6 +26,7 @@ runs:
       with:
         version: ${{inputs.package-version}}
     - name: "Find appropriate update version"
+      id: output_version
       run: |
         new_package_version="";
         case "${{inputs.updated-state}}" in
