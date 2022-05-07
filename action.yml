@@ -1,5 +1,8 @@
 name: "Get OpenAPI updated package version"
 description: "A GitHub Action for getting appropriate updated semver OpenAPI package version."
+branding:
+  icon: 'check-square'
+  color: 'blue'
 
 inputs:
   package-version:
