@@ -1,0 +1,45 @@
+name: "Get OpenAPI updated package version"
+description: "A GitHub Action for getting appropriate updated semver OpenAPI package version."
+
+inputs:
+  package-version:
+    required: true
+    description: "Current package version"
+  updated-state:
+    required: true
+    description: "Updated OpenAPI Diff state. Expected values: no_changes, incompatible, compatible"
+
+outputs:
+  new-package-version:
+    description: "New package version"
+    value: ${{steps.gen-new-version.outputs.new_package_version}}
+
+runs:
+  using: "composite"
+  steps:
+    - name: 'Get next possible versions'
+      id: semvers
+      uses: "WyriHaximus/github-action-next-semvers@v1"
+      with:
+        version: ${{inputs.package-version}}
+    - name: "Find appropriate update version"
+      run: |
+        new_package_version="";
+        case "${{inputs.updated-state}}" in
+          compatible)
+            new_package_version="${{steps.semvers.outputs.minor}}";
+            ;;
+          incompatible)
+            new_package_version="${{steps.semvers.outputs.major}}";
+            ;;
+          no_changes)
+            new_package_version="${{inputs.package-version}}";
+            ;;
+          *)
+            echo "Invalid updated state. Expected values: 'no_changes', 'incompatible', 'compatible'.";
+            exit 1;
+            ;;
+        esac
+
+        echo "::set-output name=new_package_version::$new_package_version";
+      shell: bash
