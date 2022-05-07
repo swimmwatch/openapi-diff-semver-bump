@@ -18,7 +18,7 @@ The following example [workflow steps](https://help.github.com/en/actions/config
     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 - name: "Get appropriate new package version"
   id: updated_version
-  uses: swimmwatch/openapi-diff-semver-bump
+  uses: swimmwatch/openapi-diff-semver-bump@v1
   with:
     package-version: ${{steps.previous_tag.outputs.tag}}
     updated-state: ${{steps.diff_state.outputs.state}}
